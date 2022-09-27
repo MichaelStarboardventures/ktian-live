@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import { useNode } from '@craftjs/core';
-import { Paper, Box } from '@mui/material';
+import { Paper, Box, TextField, Typography } from '@mui/material';
 import { request } from '@umijs/max';
+import { UserComponent } from '@craftjs/core';
+import { ECharts } from 'echarts';
 
 type CirculationSupplyData = {
   stat_date: string;
@@ -14,7 +16,11 @@ type CirculationSupplyData = {
   burnt_fil: string;
 };
 
-const chartsOptions = async () => {
+type CirculationSupplyProps = {
+  title?: string;
+};
+
+const chartsOptions = async (title?: CirculationSupplyProps['title']) => {
   const { data } = await request<{ data: CirculationSupplyData[] }>(
     '/circulating_supply/circulating_supply',
     {
@@ -24,7 +30,7 @@ const chartsOptions = async () => {
 
   const option = {
     title: {
-      text: 'FIL Protocol Circulation Supply',
+      text: title,
     },
     tooltip: {
       trigger: 'axis',
@@ -147,15 +153,18 @@ const chartsOptions = async () => {
   return option;
 };
 
-export const CirculationSupply: React.FC = () => {
+export const CirculationSupply: UserComponent<CirculationSupplyProps> = ({
+  title,
+}) => {
   const {
     connectors: { drag, connect },
   } = useNode();
   const ref = useRef<HTMLDivElement>(null);
-  const option = chartsOptions();
+  let charts: ECharts;
 
   useEffect(() => {
-    const charts = echarts.init(ref.current as HTMLDivElement);
+    charts = echarts.init(ref.current as HTMLDivElement);
+    const option = chartsOptions(title);
 
     option.then((data) => {
       charts.setOption(data);
@@ -164,9 +173,46 @@ export const CirculationSupply: React.FC = () => {
 
   return (
     <Paper ref={(dom) => connect(drag(dom as HTMLDivElement))} sx={{ mb: 3 }}>
+      <Typography variant={'h4'} p={2}>
+        {title}
+      </Typography>
       <Box ref={ref} sx={{ width: '100%', minHeight: '350px', p: 2 }} />
     </Paper>
   );
 };
 
+const Settings = () => {
+  const {
+    props,
+    actions: { setProp },
+  } = useNode((node) => ({
+    props: node.data.props,
+  }));
+
+  return (
+    <Box p={2}>
+      <TextField
+        fullWidth
+        value={props.title}
+        label={'title'}
+        onChange={(event) => {
+          setProp(
+            (props: CirculationSupplyProps) =>
+              (props.title = event.target.value),
+          );
+        }}
+      />
+    </Box>
+  );
+};
+
+CirculationSupply.craft = {
+  related: {
+    settings: Settings,
+  },
+};
+
 CirculationSupply.displayName = 'CirculationSupply';
+CirculationSupply.defaultProps = {
+  title: 'FIL Protocol Circulation Supply',
+};

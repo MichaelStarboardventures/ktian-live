@@ -1,12 +1,34 @@
 import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import { useNode } from '@craftjs/core';
-import { Box, Paper } from '@mui/material';
+import { Box, Paper, TextField, Typography } from '@mui/material';
+import { request } from '@umijs/max';
+import { UserComponent } from '@craftjs/core';
 
-const chartsOptions = () => {
+type CirculationSupplyData = {
+  stat_date: string;
+  total_initial_pledge: string;
+  total_locked_funds: string;
+  new_initial_pledge: string;
+  new_reward_locked: string;
+  new_reward_released: string;
+};
+
+type FilBreakdownProps = {
+  title?: string;
+};
+
+const chartsOptions = async (title?: FilBreakdownProps['title']) => {
+  const { data } = await request<{ data: CirculationSupplyData[] }>(
+    '/circulating_supply/network_locked_fil_breakdown',
+    {
+      method: 'get',
+    },
+  );
+
   const option = {
     title: {
-      text: 'Stacked Area Chart',
+      text: title,
     },
     tooltip: {
       trigger: 'axis',
@@ -18,7 +40,12 @@ const chartsOptions = () => {
       },
     },
     legend: {
-      data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine'],
+      data: [
+        'New Released Rewards',
+        'New Initial Pledge',
+        'New Locked Rewards',
+        'Change in FIL Locked',
+      ],
     },
     toolbox: {
       feature: {
@@ -35,7 +62,14 @@ const chartsOptions = () => {
       {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: data
+          .sort((a, b) => {
+            return (
+              Number(a['stat_date'].split('-')[0]) -
+              Number(b['stat_date'].split('-')[0])
+            );
+          })
+          .map((ret) => ret['stat_date']),
       },
     ],
     yAxis: [
@@ -45,58 +79,46 @@ const chartsOptions = () => {
     ],
     series: [
       {
-        name: 'Email',
+        name: 'New Released Rewards',
         type: 'line',
         stack: 'Total',
         areaStyle: {},
         emphasis: {
           focus: 'series',
         },
-        data: [120, 132, 101, 134, 90, 230, 210],
+        data: data.map((ret) =>
+          (+ret['new_reward_released'] / 1000).toFixed(0),
+        ),
       },
       {
-        name: 'Union Ads',
+        name: 'New Initial Pledge',
         type: 'line',
         stack: 'Total',
         areaStyle: {},
         emphasis: {
           focus: 'series',
         },
-        data: [220, 182, 191, 234, 290, 330, 310],
+        data: data.map((ret) => (+ret['new_initial_pledge'] / 1000).toFixed(0)),
       },
       {
-        name: 'Video Ads',
+        name: 'New Locked Rewards',
         type: 'line',
         stack: 'Total',
         areaStyle: {},
         emphasis: {
           focus: 'series',
         },
-        data: [150, 232, 201, 154, 190, 330, 410],
+        data: data.map((ret) => (+ret['new_reward_locked'] / 1000).toFixed(0)),
       },
       {
-        name: 'Direct',
+        name: 'Change in FIL Locked',
         type: 'line',
         stack: 'Total',
         areaStyle: {},
         emphasis: {
           focus: 'series',
         },
-        data: [320, 332, 301, 334, 390, 330, 320],
-      },
-      {
-        name: 'Search Engine',
-        type: 'line',
-        stack: 'Total',
-        label: {
-          show: true,
-          position: 'top',
-        },
-        areaStyle: {},
-        emphasis: {
-          focus: 'series',
-        },
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        data: data.map((ret) => (+ret['total_locked_funds'] / 1000).toFixed(0)),
       },
     ],
   };
@@ -104,23 +126,62 @@ const chartsOptions = () => {
   return option;
 };
 
-export const FilBreakdown: React.FC = () => {
+export const FilBreakdown: UserComponent<FilBreakdownProps> = ({ title }) => {
   const {
     connectors: { drag, connect },
   } = useNode();
   const ref = useRef<HTMLDivElement>(null);
-  const option = chartsOptions();
+  const option = chartsOptions(title);
 
   useEffect(() => {
     const charts = echarts.init(ref.current as HTMLDivElement);
-    charts.setOption(option);
+
+    option.then((data) => {
+      charts.setOption(data);
+    });
   }, []);
 
   return (
     <Paper ref={(dom) => connect(drag(dom as HTMLDivElement))} sx={{ mb: 3 }}>
+      <Typography variant={'h4'} p={2}>
+        {title}
+      </Typography>
       <Box ref={ref} sx={{ width: '100%', minHeight: '350px', p: 2 }} />
     </Paper>
   );
 };
 
+const Settings = () => {
+  const {
+    props,
+    actions: { setProp },
+  } = useNode((node) => ({
+    props: node.data.props,
+  }));
+
+  return (
+    <Box p={2}>
+      <TextField
+        fullWidth
+        value={props.title}
+        label={'title'}
+        onChange={(event) => {
+          setProp(
+            (props: FilBreakdownProps) => (props.title = event.target.value),
+          );
+        }}
+      />
+    </Box>
+  );
+};
+
+FilBreakdown.craft = {
+  related: {
+    settings: Settings,
+  },
+};
+
 FilBreakdown.displayName = 'FilBreakdown';
+FilBreakdown.defaultProps = {
+  title: 'Dally Locked FIL Breakdown',
+};

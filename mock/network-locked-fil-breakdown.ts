@@ -10,7 +10,7 @@ export default {
         status: 200,
         'data|60': [
           {
-            stat_date: `@date('yyyy-MM-dd HH:mm:ss')`,
+            stat_date: `@date('yyyy-MM-dd')`,
             total_initial_pledge: `@float(62164, 51178742, 3)`,
             total_locked_funds: `@float(62164, 51178742, 3)`,
             new_initial_pledge: `@float(62164, 51178742, 3)`,
