@@ -2,7 +2,10 @@ import React from 'react';
 import { Grid, Stack, Button } from '@mui/material';
 import { useModel } from '@umijs/max';
 import { useEditor } from '@craftjs/core';
-import { Text } from '@/layouts/components/material/components';
+import {
+  CirculationSupply,
+  FilBreakdown,
+} from '@/layouts/components/material/components';
 
 export const Material = () => {
   const {
@@ -32,19 +35,19 @@ export const Material = () => {
           variant={'outlined'}
           fullWidth
           ref={(ref) =>
-            create(ref as unknown as HTMLDivElement, <Text>Table</Text>)
+            create(ref as unknown as HTMLDivElement, <CirculationSupply />)
           }
         >
-          Table
+          Supply
         </Button>
         <Button
           variant={'outlined'}
           fullWidth
           ref={(ref) =>
-            create(ref as unknown as HTMLDivElement, <Text>Line</Text>)
+            create(ref as unknown as HTMLDivElement, <FilBreakdown />)
           }
         >
-          Line
+          Fil
         </Button>
       </Stack>
     </Grid>

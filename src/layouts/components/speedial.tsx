@@ -1,6 +1,8 @@
+import React from 'react';
 import {
   SpeedDial as MuiSpeedDial,
   SpeedDialAction as MuiSpeedDialAction,
+  TextField,
 } from '@mui/material';
 import {
   SettingOutlined,
@@ -10,10 +12,35 @@ import {
 import { ReactNode } from 'react';
 import { useModel } from '@umijs/max';
 import { EventProps } from '@/models/event';
+import { Modal, ModalProps } from '@/components';
+
+type PublishModalProps = {
+  setEventName: React.Dispatch<
+    React.SetStateAction<'edit' | 'publish' | 'save'>
+  >;
+} & ModalProps;
 
 type SpeedDialActionProps = {
   icon: ReactNode;
   title: EventProps['eventName'];
+};
+
+const PublishModal: React.FC<PublishModalProps> = ({
+  title,
+  trigger,
+  setEventName,
+}) => {
+  return (
+    <Modal
+      title={title}
+      trigger={trigger}
+      onOk={() => {
+        setEventName('publish');
+      }}
+    >
+      <TextField fullWidth label={'Name'} />
+    </Modal>
+  );
 };
 
 const speedDialActions: SpeedDialActionProps[] = [
@@ -40,8 +67,19 @@ export const SpeedDial = () => {
         <MuiSpeedDialAction
           key={action.title}
           title={action.title}
-          icon={action.icon}
-          onClick={() => setEventName(action.title)}
+          icon={
+            action.title === 'publish' ? (
+              <PublishModal
+                title={action.title}
+                setEventName={setEventName}
+                trigger={action.icon as JSX.Element}
+              />
+            ) : (
+              React.cloneElement(action.icon as JSX.Element, {
+                onClick: () => setEventName(action.title),
+              })
+            )
+          }
         />
       ))}
     </MuiSpeedDial>

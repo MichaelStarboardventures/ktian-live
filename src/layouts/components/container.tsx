@@ -46,6 +46,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
                 <Slider />
               </Box>
               <Box
+                p={3}
                 sx={{
                   flexGrow: 9,
                   height: 'calc(100vh - 64px)',
