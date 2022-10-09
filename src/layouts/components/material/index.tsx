@@ -17,10 +17,10 @@ export const Material = () => {
   return (
     <Grid
       item
-      flexBasis={enabled ? '200px' : 0}
-      width={enabled ? '200px' : 0}
+      flexBasis={enabled ? '60px' : 0}
+      height={enabled ? '60px' : 0}
       sx={(theme) => ({
-        transition: theme.transitions.create(['flexBasis', 'width'], {
+        transition: theme.transitions.create(['flexBasis', 'height'], {
           duration: theme.transitions.duration.standard,
         }),
       })}

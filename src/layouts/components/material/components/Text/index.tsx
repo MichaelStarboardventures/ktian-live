@@ -1,7 +1,9 @@
 import { useNode } from '@craftjs/core';
 import React, { ReactNode } from 'react';
 
-export const Text: React.FC<{ children?: ReactNode }> = ({ children }) => {
+export const Text: React.FC<{ children?: ReactNode; content?: string }> = ({
+  children,
+}) => {
   const {
     connectors: { connect, drag },
   } = useNode();

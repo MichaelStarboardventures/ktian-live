@@ -4,8 +4,8 @@ import { Stack, Box, Grid } from '@mui/material';
 import { Slider } from '@/layouts/components/slider';
 import { Header } from '@/layouts/components/header';
 import { SpeedDial } from '@/layouts/components/speedial';
-import { Material } from '@/layouts/components/material';
 import { Settings } from '@/layouts/components/settings';
+import { Toolbar } from '@/layouts/components/Toolbar';
 import * as resolves from '@/layouts/components/material/components';
 import { useModel, history } from '@umijs/max';
 
@@ -37,11 +37,13 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
       }}
     >
       <Grid container direction={'row'} overflow={'hidden'}>
-        <Material />
         <Grid item flexGrow={10}>
-          <Stack direction={'column'}>
-            <Header />
-            <Stack direction={'row'} sx={{ flexGrow: 9 }}>
+          <Stack direction={'column'} sx={{ height: '100%' }}>
+            <Toolbar />
+            <Box flexBasis={'64px'}>
+              <Header />
+            </Box>
+            <Stack direction={'row'} sx={{ flexGrow: 10 }}>
               <Box sx={{ flexBasis: '200px' }}>
                 <Slider />
               </Box>
@@ -49,7 +51,6 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
                 p={3}
                 sx={{
                   flexGrow: 9,
-                  height: 'calc(100vh - 64px)',
                 }}
               >
                 {children}
