@@ -80,7 +80,7 @@ const chartsOptions = async (title?: FilBreakdownProps['title']) => {
     series: [
       {
         name: 'New Released Rewards',
-        type: 'line',
+        type: 'bar',
         stack: 'Total',
         areaStyle: {},
         emphasis: {
@@ -92,7 +92,7 @@ const chartsOptions = async (title?: FilBreakdownProps['title']) => {
       },
       {
         name: 'New Initial Pledge',
-        type: 'line',
+        type: 'bar',
         stack: 'Total',
         areaStyle: {},
         emphasis: {
@@ -102,7 +102,7 @@ const chartsOptions = async (title?: FilBreakdownProps['title']) => {
       },
       {
         name: 'New Locked Rewards',
-        type: 'line',
+        type: 'bar',
         stack: 'Total',
         areaStyle: {},
         emphasis: {
@@ -112,7 +112,7 @@ const chartsOptions = async (title?: FilBreakdownProps['title']) => {
       },
       {
         name: 'Change in FIL Locked',
-        type: 'line',
+        type: 'bar',
         stack: 'Total',
         areaStyle: {},
         emphasis: {

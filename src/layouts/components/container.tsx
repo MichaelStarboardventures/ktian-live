@@ -3,7 +3,6 @@ import React, { ReactNode } from 'react';
 import { Stack, Box, Grid } from '@mui/material';
 import { Slider } from '@/layouts/components/slider';
 import { Header } from '@/layouts/components/header';
-import { Settings } from '@/layouts/components/settings';
 import { Toolbar } from '@/layouts/components/Toolbar';
 import * as resolves from '@/layouts/components/material/components';
 import { useModel, history } from '@umijs/max';
@@ -57,7 +56,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
             </Stack>
           </Stack>
         </Grid>
-        <Settings />
+        {/*<Settings />*/}
       </Grid>
     </Editor>
   );
