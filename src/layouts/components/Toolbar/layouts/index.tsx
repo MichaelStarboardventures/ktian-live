@@ -10,8 +10,8 @@ const LayoutsComponent = () => {
   } = useEditor();
 
   return (
-    <Paper>
-      <Stack width={'300px'} p={2} direction={'row'} spacing={2}>
+    <Paper sx={{ minHeight: '300px' }}>
+      <Stack width={'400px'} p={2} direction={'row'} spacing={2}>
         <Button
           variant={'outlined'}
           fullWidth

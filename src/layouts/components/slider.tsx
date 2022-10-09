@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
 import {
   List,
   ListItemButton,
@@ -12,6 +12,7 @@ import { TextField, Button } from '@mui/material';
 import { Modal } from '@/components';
 import { AppProps } from '@/models/app';
 import { EditOutlined } from '@mui/icons-material';
+import { INIT_DATA } from '@/constants';
 
 type PageFieldModalProps = {
   name: ReactNode;
@@ -22,6 +23,10 @@ const PageFieldModal: React.FC<PageFieldModalProps> = ({ name, app }) => {
   const [currentApp, setCurrentApp] = useState<AppProps>(app);
   const { setApp } = useModel('app');
 
+  useEffect(() => {
+    setCurrentApp(app);
+  }, [app]);
+
   return (
     <Modal
       trigger={
@@ -31,14 +36,16 @@ const PageFieldModal: React.FC<PageFieldModalProps> = ({ name, app }) => {
       }
       onOk={() => {
         setApp((apps) => {
-          return apps?.map((app) => {
+          const result = apps?.map((app) => {
             if (app.key === currentApp.key) {
-              app.path = currentApp.path;
+              app.path = `${currentApp.path}`;
               app.name = currentApp.name;
             }
 
             return app;
           });
+
+          return result;
         });
       }}
     >
@@ -67,10 +74,14 @@ const PageFieldModal: React.FC<PageFieldModalProps> = ({ name, app }) => {
               target: { value },
             } = event;
 
-            setCurrentApp((data) => ({
-              ...data,
-              path: value,
-            }));
+            setCurrentApp((data) => {
+              const path = `${value}`;
+
+              return {
+                ...data,
+                path,
+              };
+            });
           }}
         />
       </Stack>
@@ -123,8 +134,8 @@ export const Slider = () => {
                 {
                   key: new Date().getTime().toString(),
                   name: 'page' + current,
-                  path: '/page' + current,
-                  data: '',
+                  path: '/main/page' + current,
+                  data: INIT_DATA,
                 },
               ]);
             }}

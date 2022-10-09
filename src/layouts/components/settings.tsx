@@ -11,8 +11,9 @@ export const Settings = () => {
     <Grid
       item
       flexBasis={enabled ? '300px' : 0}
-      width={enabled ? '300px' : 0}
+      // width={enabled ? '300px' : 0}
       sx={(theme) => ({
+        overflow: 'hidden',
         transition: theme.transitions.create(['flexBasis', 'width'], {
           duration: theme.transitions.duration.standard,
         }),

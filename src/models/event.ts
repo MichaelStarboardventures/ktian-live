@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export type EventProps = {
-  eventName: 'edit' | 'publish' | 'save';
+  eventName: 'edit' | 'share' | 'save';
 };
 
 const useEvent = () => {

@@ -9,13 +9,11 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { useModel } from '@umijs/max';
+import { useModel, history } from '@umijs/max';
 import { Modal, ModalProps } from '@/components';
 
 type PublishModalProps = {
-  setEventName: React.Dispatch<
-    React.SetStateAction<'edit' | 'publish' | 'save'>
-  >;
+  setEventName: React.Dispatch<React.SetStateAction<'edit' | 'share' | 'save'>>;
 } & ModalProps;
 
 const PublishModal: React.FC<PublishModalProps> = ({
@@ -23,21 +21,40 @@ const PublishModal: React.FC<PublishModalProps> = ({
   trigger,
   setEventName,
 }) => {
+  const { app, setCurrentApp } = useModel('app');
+  const { setShareApps, setShareName } = useModel('share');
+  const [value, setValue] = useState('');
+
   return (
     <Modal
       title={title}
       trigger={trigger}
       onOk={() => {
-        setEventName('publish');
+        setEventName('share');
+        const newApps = app.slice(0).map((ret) => {
+          ret.path = ret.path.replace('main', value);
+
+          return ret;
+        });
+
+        setShareApps(() => newApps);
+        setCurrentApp(newApps[0].path);
+        setShareName(value);
+
+        history.push(newApps[0].path);
       }}
     >
-      <TextField fullWidth label={'Name'} />
+      <TextField
+        fullWidth
+        label={'Name'}
+        onChange={(event) => setValue(event.target.value)}
+      />
     </Modal>
   );
 };
 
 const UserProfile: React.FC = () => {
-  const { setEventName } = useModel('event');
+  const { setEventName, eventName } = useModel('event');
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
 
   return (
@@ -59,15 +76,36 @@ const UserProfile: React.FC = () => {
             setAnchorEl(null);
           }}
         >
-          edit
+          Edit
         </MenuItem>
         <MenuItem value={'share'}>
           <PublishModal
             title={'share'}
             setEventName={setEventName}
-            trigger={<span>share</span>}
+            trigger={<span>Share</span>}
           />
         </MenuItem>
+        <MenuItem
+          value={'setting'}
+          onClick={() => {
+            setEventName('save');
+            setAnchorEl(null);
+            history.push('/setting');
+          }}
+        >
+          Setting
+        </MenuItem>
+        {eventName === 'edit' && (
+          <MenuItem
+            value={'save'}
+            onClick={() => {
+              setEventName('save');
+              setAnchorEl(null);
+            }}
+          >
+            Save
+          </MenuItem>
+        )}
       </Menu>
     </>
   );
@@ -77,7 +115,7 @@ export const Header = () => {
   return (
     <AppBar position={'static'}>
       <Toolbar>
-        <div>logo</div>
+        <div onClick={() => history.push('/')}>logo</div>
         <Box flexGrow={1}></Box>
         <UserProfile />
       </Toolbar>
