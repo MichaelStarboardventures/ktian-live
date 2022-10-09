@@ -10,11 +10,11 @@ export const Toolbar = () => {
   return (
     <Grid
       item
-      flexBasis={enabled ? '60px' : 0}
-      height={enabled ? '60px' : 0}
-      bgcolor={'#2e7d32'}
+      bgcolor={'#ba68c8'}
       color={'#fff'}
       sx={(theme) => ({
+        flexBasis: enabled ? '60px' : 0,
+        height: enabled ? '60px' : 0,
         transition: theme.transitions.create(['flexBasis', 'height'], {
           duration: theme.transitions.duration.standard,
         }),
