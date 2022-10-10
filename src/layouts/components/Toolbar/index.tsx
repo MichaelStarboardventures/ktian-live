@@ -2,6 +2,7 @@ import { Grid, Stack } from '@mui/material';
 import { useModel } from '@umijs/max';
 import { Layouts } from '@/layouts/components/Toolbar/layouts';
 import { Charts } from '@/layouts/components/Toolbar/charts';
+import { Templates } from '@/layouts/components/Toolbar/templates';
 
 export const Toolbar = () => {
   const { eventName } = useModel('event');
@@ -31,6 +32,7 @@ export const Toolbar = () => {
       >
         <Layouts />
         <Charts />
+        <Templates />
       </Stack>
     </Grid>
   );

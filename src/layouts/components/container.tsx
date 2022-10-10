@@ -34,7 +34,7 @@ export const Container: React.FC<ContainerProps> = ({ children }) => {
         });
       }}
     >
-      <Grid container direction={'row'} overflow={'hidden'}>
+      <Grid container direction={'row'} overflow={'hidden'} height={'100vh'}>
         <Grid item flexGrow={10}>
           <Stack direction={'column'} sx={{ height: '100%' }}>
             <Toolbar />
