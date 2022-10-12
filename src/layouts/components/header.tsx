@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useModel, history } from '@umijs/max';
 import { Modal, ModalProps } from '@/components';
+// import db from '@/utils/db';
 
 type PublishModalProps = {
   setEventName: React.Dispatch<React.SetStateAction<'edit' | 'share' | 'save'>>;
@@ -21,27 +22,25 @@ const PublishModal: React.FC<PublishModalProps> = ({
   trigger,
   setEventName,
 }) => {
-  const { app, setCurrentApp } = useModel('app');
-  const { setShareApps, setShareName } = useModel('share');
+  // const { app, setCurrentApp } = useModel('app');
+  // const { setShareApps, setShareName } = useModel('share');
   const [value, setValue] = useState('');
 
   return (
     <Modal
       title={title}
       trigger={trigger}
-      onOk={() => {
+      onOk={async () => {
         setEventName('share');
-        const newApps = app.slice(0).map((ret) => {
-          ret.path = ret.path.replace('main', value);
+        console.log(value);
 
-          return ret;
-        });
+        // setShareApps(() => newApps);
+        // setCurrentApp(newApps[0].path);
+        // setShareName(value);
 
-        setShareApps(() => newApps);
-        setCurrentApp(newApps[0].path);
-        setShareName(value);
+        // await db.insert({ id: new Date().getTime().toString(), app });
 
-        history.push(newApps[0].path);
+        // history.push(newApps[0].path);
       }}
     >
       <TextField
@@ -56,6 +55,7 @@ const PublishModal: React.FC<PublishModalProps> = ({
 const UserProfile: React.FC = () => {
   const { setEventName, eventName } = useModel('event');
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+  // const { app, setCurrentApp } = useModel('app');
 
   return (
     <>
@@ -98,7 +98,7 @@ const UserProfile: React.FC = () => {
         {eventName === 'edit' && (
           <MenuItem
             value={'save'}
-            onClick={() => {
+            onClick={async () => {
               setEventName('save');
               setAnchorEl(null);
             }}

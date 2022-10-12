@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { INIT_DATA } from '@/constants';
 
 export type AppProps = {
+  id?: string;
   key?: string;
   path: string;
   name: string;
