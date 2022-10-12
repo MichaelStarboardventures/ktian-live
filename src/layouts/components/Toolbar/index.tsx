@@ -11,8 +11,7 @@ export const Toolbar = () => {
   return (
     <Grid
       item
-      bgcolor={'#ba68c8'}
-      color={'#fff'}
+      bgcolor={'paper.default'}
       sx={(theme) => ({
         flexBasis: enabled ? '60px' : 0,
         height: enabled ? '60px' : 0,
