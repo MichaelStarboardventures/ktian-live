@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useModel, history } from '@umijs/max';
 import { Modal, ModalProps } from '@/components';
-// import db from '@/utils/db';
+import db from '@/utils/db';
 
 type PublishModalProps = {
   setEventName: React.Dispatch<React.SetStateAction<'edit' | 'share' | 'save'>>;
@@ -22,8 +22,7 @@ const PublishModal: React.FC<PublishModalProps> = ({
   trigger,
   setEventName,
 }) => {
-  // const { app, setCurrentApp } = useModel('app');
-  // const { setShareApps, setShareName } = useModel('share');
+  const { app } = useModel('app');
   const [value, setValue] = useState('');
 
   return (
@@ -32,15 +31,8 @@ const PublishModal: React.FC<PublishModalProps> = ({
       trigger={trigger}
       onOk={async () => {
         setEventName('share');
-        console.log(value);
 
-        // setShareApps(() => newApps);
-        // setCurrentApp(newApps[0].path);
-        // setShareName(value);
-
-        // await db.insert({ id: new Date().getTime().toString(), app });
-
-        // history.push(newApps[0].path);
+        await db.insert('apps', { rows: [...app], appName: value });
       }}
     >
       <TextField
@@ -55,7 +47,6 @@ const PublishModal: React.FC<PublishModalProps> = ({
 const UserProfile: React.FC = () => {
   const { setEventName, eventName } = useModel('event');
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
-  // const { app, setCurrentApp } = useModel('app');
 
   return (
     <>
@@ -116,7 +107,7 @@ export const Header = () => {
     <AppBar position={'static'}>
       <Toolbar>
         <div onClick={() => history.push('/')}>logo</div>
-        <Box flexGrow={1}></Box>
+        <Box flexGrow={1} />
         <UserProfile />
       </Toolbar>
     </AppBar>

@@ -2,15 +2,23 @@ import { DbProps } from '@/utils/services/db.props';
 import db from '@/utils/services/init';
 
 class Apps implements DbProps {
+  name: string = 'apps';
+
   insert = <T>(data: T) => {
+    const { name } = this;
+    const id = new Date().getTime().toString();
+
     return new Promise<T>((resolve, reject) => {
-      db.insert(data, (err: any, result: T | PromiseLike<T>) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
+      db.insert(
+        { data: { ...data }, name, id },
+        (err: any, result: T | PromiseLike<T>) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        },
+      );
     });
   };
 
